@@ -92,4 +92,4 @@ Fields include:
 The ER Diagram for the Database is shown below:
 
 
-![Er Diagra,](<../Er Diagram.jpg>)
+![Er Diagra,](<Er Diagram.jpg>)
