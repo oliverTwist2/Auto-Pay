@@ -1,8 +1,8 @@
-const Resend = require("resend");
+const { Resend } = require("resend");
 const resend = new Resend(process.env.RESEND_KEY);
 
 /**
- * 
+ *
  * @param {String} email - Recevier Email
  * @param {String} subject - Email Subject
  * @param {String} body - Email Body
@@ -15,8 +15,11 @@ exports.sendMail = async (email, subject, body) => {
       subject: subject,
       html: body,
     });
-    // Add Loger
+    // Add Logger
+    console.log("Mail sent =>", data);
+
   } catch (error) {
     // Add Logger
+    console.log("Mail Failed =>", error);
   }
 };
