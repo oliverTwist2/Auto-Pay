@@ -5,7 +5,7 @@ const paymentSchema = new mongoose.Schema(
       
         ticket_id: { type: String, required: true },
         reference_no: { type: String, required: true },
-        status: { type: Number, required: true }
+        payment_status: { type: Number, required: true }
     },
     {
         timestamps: true, toJSON: { virtuals: true }
