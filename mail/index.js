@@ -1,6 +1,8 @@
 const { Resend } = require("resend");
-const resend = new Resend(process.env.RESEND_KEY);
-
+const dotenv = require("dotenv");
+dotenv.config()
+const resend = new Resend('re_123');
+// const resend = new Resend(process.env.RESEND_KEY);
 /**
  *
  * @param {String} email - Recevier Email
