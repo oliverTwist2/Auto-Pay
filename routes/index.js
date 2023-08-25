@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/make/payment', indexController.initializePayments)
-router.post('verify/payment', indexController.verifyPayment)
+router.post('/verify/payment', indexController.verifyPayment)
 module.exports = router;
 
 

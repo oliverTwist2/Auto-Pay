@@ -56,6 +56,8 @@ exports.createTicket = asyncHandler(async (req, res, next) => {
 //Make Payments
 
 exports.initializePayments = asyncHandler(async(req,res,next)=>{
+
+  const {email, amount} = req.body
   url = "https://api.paystack.co/transaction/initialize"
 
   const headers = {
@@ -64,18 +66,21 @@ exports.initializePayments = asyncHandler(async(req,res,next)=>{
  }
   
   data = { 
-  email: "customer@email.com",
-    amount : 20000
+  email: email,
+    amount : amount
   }
   try {
     const resp = await axios.post(url,data,{headers})
     console.log(resp.data,"resp")
+    res.status(200).json({message:'successful', data:resp?.data})
   } catch (error) {
     console.log(error,"error")
   }
 })
 
 exports.verifyPayment = asyncHandler(async (req,res,next)=>{
+
+  console.log(req.body,"reqqqqqqq")
       const hash = crypto.createHmac('sha512', process.env.SECRET_KEY).update(JSON.stringify(req.body)).digest('hex');
       if (hash == req.headers['x-paystack-signature']) {
         // Retrieve the request's body
@@ -86,6 +91,6 @@ exports.verifyPayment = asyncHandler(async (req,res,next)=>{
   try {
    
   } catch (error) {
-    
+    console.log(error,"error")
   }
 })
