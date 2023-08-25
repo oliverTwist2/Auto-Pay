@@ -3,9 +3,12 @@ const asyncHandler = require("../middleware/async");
 const { sendMail } = require("../mail");
 
 const Ticket = require("../Models/ticket");
-const Concert = require("../Models/concert");
+//const Concert = require("../Models/concert");
 const Payment = require("../Models/payment");
-
+const axios = require("axios")
+const dotenv = require("dotenv")
+const crypto = require('crypto');
+dotenv.config()
 /**
  * @author GUEST <******@gmail.com>
  * @description  Get User Detail To create  a Ticket State
@@ -47,3 +50,42 @@ exports.createTicket = asyncHandler(async (req, res, next) => {
     data: data,
   });
 });
+
+
+
+//Make Payments
+
+exports.initializePayments = asyncHandler(async(req,res,next)=>{
+  url = "https://api.paystack.co/transaction/initialize"
+
+  const headers = {
+  Authorization: `Bearer ${process.env.SECRET_KEY}`,
+  "Content-Type": "application/json"
+ }
+  
+  data = { 
+  email: "customer@email.com",
+    amount : 20000
+  }
+  try {
+    const resp = await axios.post(url,data,{headers})
+    console.log(resp.data,"resp")
+  } catch (error) {
+    console.log(error,"error")
+  }
+})
+
+exports.verifyPayment = asyncHandler(async (req,res,next)=>{
+      const hash = crypto.createHmac('sha512', process.env.SECRET_KEY).update(JSON.stringify(req.body)).digest('hex');
+      if (hash == req.headers['x-paystack-signature']) {
+        // Retrieve the request's body
+        const event = req.body;
+        // Do something with event  
+        console.log(event)
+      }
+  try {
+   
+  } catch (error) {
+    
+  }
+})
