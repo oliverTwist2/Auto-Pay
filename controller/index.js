@@ -70,14 +70,12 @@ exports.verifyPayment = asyncHandler(async (req,res,next)=>{
       const data = req.body;
   try {
     if (data.event === "charge.success") {
-      const ticket = await ticketModel.find({ reference_no: data?.data?.reference })
+      
       const updateTicket = await ticketModel.updateOne(
         { reference_no: data?.data?.reference },
         { $set: { amount: data?.data?.amount, payment_status: true } }
       )
      
-      const updateNoSold = await ticketModel.updateMany({}, { $set: { no_sold: ticket[0]?.no_sold + ticket[0]?.ticket_count } })
-      
       return res.status(200).json({ message: "Successful payment" })
     }
     return res.status(200).json({ message: "Unsuccessful payment" })
