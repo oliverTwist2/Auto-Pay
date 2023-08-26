@@ -25,9 +25,9 @@ dotenv.config()
 
 exports.initializePayments = asyncHandler(async(req,res,next)=>{
 
-      const {email, quantity} = req.body
+      const {email, quantity, amount} = req.body
 
-      if(!(email && quantity)){
+      if(!(email && quantity && amount)){
         return next(new ErrorResponse('Incomplete details', 400));
 
       }
@@ -40,7 +40,7 @@ exports.initializePayments = asyncHandler(async(req,res,next)=>{
   
       data = { 
         email: email,
-        amount : 2000
+        amount : amount * 100
       }
   try {
     const resp = await axios.post(url,data,{headers})
@@ -48,10 +48,13 @@ exports.initializePayments = asyncHandler(async(req,res,next)=>{
 
    // create tickets
     const ticket = await ticketModel.create({
+      
       email: email,
       ticket_count: quantity,
       reference_no: resp.data?.data?.reference,
-      access_code: resp.data?.data?.access_code
+      access_code: resp.data?.data?.access_code,
+      amount_paid: amount
+
     })
     res.status(200).json({message:'Authorization URL created', data:resp?.data})
   } catch (error) {
@@ -73,7 +76,7 @@ exports.verifyPayment = asyncHandler(async (req,res,next)=>{
       
       const updateTicket = await ticketModel.updateOne(
         { reference_no: data?.data?.reference },
-        { $set: { amount: data?.data?.amount, payment_status: true } }
+        { $set: { amount_paid: data?.data?.amount, payment_status: true } }
       )
      
       return res.status(200).json({ message: "Successful payment" })
