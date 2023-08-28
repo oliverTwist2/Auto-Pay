@@ -78,6 +78,8 @@ exports.verifyPayment = asyncHandler(async (req,res,next)=>{
         { reference_no: data?.data?.reference },
         { $set: { amount_paid: data?.data?.amount, payment_status: true } }
       )
+       // send mail
+       sendMail(data?.data?.customer?.email, "Payment Successful", "Your payment was successful")
      
       return res.status(200).json({ message: "Successful payment" })
     }
